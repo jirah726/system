@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
+          crossorigin="anonymous">
+    <title>Ludiflex | Login & Registration</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            background: linear-gradient(120deg, #555555, #99999999);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .nav-button .btn {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #007bff;
+            background-color: transparent;
+            color: #007bff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-button .btn.active,
+        .nav-button .btn:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-box {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header styles */
+        header {
+            font-size: 40px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-box input,
+        .input-box select,
+        .input-box textarea {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .two-col {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        /* Social login buttons */
+        .social-container {
+            margin-top: 10px;
+        }
+
+        .fb-btn, .google-btn {
+            background-color: #dd4b39;
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .fb-btn:hover, .google-btn:hover {
+            background-color: #c23321;
+        }
+
+        /* Background Shapes */
+        .screen__background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .screen__background__shape {
+            position: absolute;
+            border-radius: 100%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .screen__background__shape1 {
+            height: 200px;
+            width: 200px;
+            top: -50px;
+            right: -50px;
+        }
+
+        .screen__background__shape2 {
+            height: 300px;
+            width: 300px;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .screen__background__shape3 {
+            height: 300px;
+            width: 300px;
+            bottom: -50px;
+            left: -75px;
+        }
+
+        .screen__background__shape4 {
+            height: 100px;
+            width: 100px;
+            top: -100px;
+            left: -100px;
+        }
+
+        /* Active Button Styles */
+        .active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-box {
+                padding: 20px;
+            }
+
+            header {
+                font-size: 30px;
+            }
+
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-button">
+        <button class="btn white-btn active" id="loginBtn" onclick="showLogin()">Sign In</button>
+        <button class="btn" id="registerBtn" onclick="showRegister()">Sign Up</button>
+    </div>
+
+    <div class="form-box">
+        <!-- Login form -->
+        <div class="login-container" id="login">
+            <header>Login</header>
+            <form onsubmit="return handleLogin(event)">
+                <div class="input-box">
+                    <input type="text" class="input-field" id="login-username" placeholder="Username or Email" required aria-label="Username or Email">
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" id="login-password" placeholder="Password" required aria-label="Password">
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <button type="submit">Sign In</button>
+                </div>
+                <div class="two-col">
+                    <div class="one">
+                        <input type="checkbox" id="login-check">
+                        <label for="login-check">Remember Me</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sign Up form -->
+        <div class="register-container" id="register" style="display:none;">
+            <div class="top">
+                <span>Have an account? <a href="#" onclick="showLogin()">Login</a></span>
+                <header>Sign Up</header>
+            </div>
+            <form onsubmit="return handleRegister(event)">
+                <div class="two-forms">
+                    <div class="input-box">
+                        <input type="text" class="input-field" id="register-firstname" placeholder="Firstname" required aria-label="Firstname">
+                        <i class="bx bx-user"></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="text" class="input-field" id="register-lastname" placeholder="Lastname" required aria-label="Lastname">
+                        <i class="bx bx-user"></i>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <input type="email" class="input-field" id="register-email" placeholder="Email" required aria-label="Email">
+                    <i class="bx bx-envelope"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" id="register-password" placeholder="Password" required aria-label="Password">
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" id="register-confirm-password" placeholder="Confirm Password" required aria-label="Confirm Password">
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <button type="submit">Register</button>
+                </div>
+                <div class="two-col">
+                    <div class="one">
+                        <input type="checkbox" id="register-check" required>
+                        <label for="register-check"><a href="#">Terms & conditions</a></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="personal-info-container" id="personal-info" style="display:none;">
+            <h1>Tourism Online Registration</h1>
+            <form id="personal-info-form" action="YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL" method="POST">
+                <h2>Personal Information</h2>
+                <div class="input-box">
+                    <label for="LastName">Last Name</label>
+                    <input type="text" id="LastName" name="LastName" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="FirstName">First Name</label>
+                    <input type="text" id="FirstName" name="FirstName" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="MiddleName">Middle Name</label>
+                    <input type="text" id="MiddleName" name="MiddleName" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="Age">Age</label>
+                    <input type="number" id="Age" name="Age" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Gender</label>
+                    <div>
+                        <input type="radio" id="male" name="gender" value="male" required>
+                        <label for="male">Male</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="female" name="gender" value="female" required>
+                        <label for="female">Female</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="other" name="gender" value="other" required>
+                        <label for="other">Other</label>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+
+                <div class="input-box">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="MayoyaoViewSites">Mayoyao View Sites</label>
+                    <select id="MayoyaoViewSites" name="MayoyaoViewSites" required>
+                        <option value="">Select your View Sites</option>
+                        <option value="TenogtogFall">Tenogtog Fall</option>
+                        <option value="AphawMachenkaFall">A'phaw Mahencha Fall</option>
+                        <option value="MayoyaoRiceTerraces">Mayoyao Rice Terraces</option>
+                        <option value="NagchajanViewDesk">Nagchajan View Desk</option>
+                        <option value="KhohangViewDesk">Khohang View Desk</option>
+                        <option value="Apho'orViewDesk">Apho'or View Desk</option>
+                        <option value="OrOlongViewDesk">Or-Olong View Desk</option>
+                        <option value="MunAlajaFall">Mun'Alaja Fall</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="travelDates">Travel Dates</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" id="travelStart" name="travelStart" required>
+                        <span>to</span>
+                        <input type="date" id="travelEnd" name="travelEnd" required>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label for="TransportVehicle">Name of Transport Vehicle</label>
+                    <select id="TransportVehicle" name="TransportVehicle" required>
+                        <option value="">Select your Transport Vehicle</option>
+                        <option value="Motor">Motor</option>
+                        <option value="Bus">Bus</option>
+                        <option value="PublicVan">Public Van</option>
+                        <option value="PrivateVan">Private Van</option>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="accommodation">Accommodation</label>
+                    <select id="accommodation" name="accommodation" required>
+                        <option value="">Select your Accommodation</option>
+                        <option value="Mayoyao Hostel">Mayoyao Hostel</option>
+                        <option value="Mayoyao View Inn">Mayoyao View Inn</option>
+                        <option value="Milcah Lodge">Milcah Lodge</option>
+                        <option value="Helen's GuestHouse">Helen's Guest House</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="tourGuide">Name of Tour Guide</label>
+                    <input type="text" id="tourGuide" name="tourGuide" placeholder="Full Name">
+                </div>
+
+                <div class="input-box">
+                    <label for="comment">Comments / Feedback</label>
+                    <textarea id="comment" name="comment" rows="3" placeholder="Write your feedback here"></textarea>
+                </div>
+
+                <div class="input-box">
+                    <label for="medicalCondition">Medical Condition</label>
+                    <input type="text" id="medicalCondition" name="medicalCondition" placeholder="List any conditions if any">
+                </div>
+
+                <!-- Submit Form -->
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Background Shapes for Aesthetic Purpose -->
+    <div class="screen__background">
+        <span class="screen__background__shape screen__background__shape1"></span>
+        <span class="screen__background__shape screen__background__shape2"></span>
+        <span class="screen__background__shape screen__background__shape3"></span>
+        <span class="screen__background__shape screen__background__shape4"></span>
+    </div>
+
+    <script>
+        // Replace this with your actual Google Apps Script Web App URL
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+        // Function to show the Login form and hide the Register and Personal Info forms
+        function showLogin() {
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('register').style.display = 'none';
+            document.getElementById('personal-info').style.display = 'none';
+            
+            // Update button styles to indicate active form
+            document.getElementById('loginBtn').classList.add('active');
+            document.getElementById('registerBtn').classList.remove('active');
+        }
+
+        // Function to show the Register form and hide the Login and Personal Info forms
+        function showRegister() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('register').style.display = 'block';
+            document.getElementById('personal-info').style.display = 'none';
+            
+            // Update button styles to indicate active form
+            document.getElementById('loginBtn').classList.remove('active');
+            document.getElementById('registerBtn').classList.add('active');
+        }
+
+        // Function to handle Login form submission
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Retrieve input values
+            const usernameOrEmail = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            const rememberMe = document.getElementById('login-check').checked;
+
+            // Basic validation
+            if (usernameOrEmail === '' || password === '') {
+                alert('Please fill in all required fields.');
+                return false;
+            }
+
+            // TODO: Implement actual authentication logic here
+            // Since we're using Google Sheets without secure authentication, we'll simulate login
+            // In a real application, never handle authentication this way.
+
+            // Fetch all registrations from Google Sheets to verify login
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: 'login',
+                    usernameOrEmail,
+                    password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Login successful! Redirecting to your dashboard...');
+                    // TODO: Redirect to the user's dashboard or desired page
+                    // Example:
+                    // window.location.href = 'dashboard.html';
+                } else {
+                    alert('Login failed: ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again later.');
+            });
+
+            return false; // Prevent form from submitting
+        }
+
+        // Function to handle Register form submission
+        function handleRegister(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Retrieve input values
+            const firstname = document.getElementById('register-firstname').value.trim();
+            const lastname = document.getElementById('register-lastname').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+            const termsAccepted = document.getElementById('register-check').checked;
+
+            // Basic validation
+            if (!termsAccepted) {
+                alert('You must accept the Terms & Conditions to register.');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return false;
+            }
+
+            // Prepare registration data
+            const registrationData = {
+                type: 'register',
+                firstname,
+                lastname,
+                email,
+                password
+            };
+
+            // Send registration data to Google Sheets
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registrationData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Registration successful! Please fill in your personal information.');
+                    // Hide the Register form and show the Personal Information form
+                    document.getElementById('register').style.display = 'none';
+                    document.getElementById('personal-info').style.display = 'block';
+                    document.querySelector('.form-box').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Registration failed: ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error during registration:', error);
+                alert('An error occurred during registration. Please try again later.');
+            });
+
+            return false; // Prevent form from submitting
+        }
+
+        // Function to handle Personal Information form submission
+        function handlePersonalInfo(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Retrieve form data
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value.trim();
+            });
+
+            // Add a type to differentiate in Apps Script
+            data.type = 'personal_info';
+
+            // Send personal information data to Google Sheets
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Your information has been submitted successfully!');
+                    // Optionally, reset the form or redirect the user
+                    event.target.reset();
+                    document.getElementById('personal-info').style.display = 'none';
+                    showLogin(); // Redirect to login or another desired action
+                } else {
+                    alert('Submission failed: ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error submitting personal information:', error);
+                alert('There was an error submitting your information. Please try again later.');
+            });
+        }
+
+        // Attach event listeners once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show Login form by default
+            showLogin();
+
+            // Attach event listeners to forms
+            const loginForm = document.querySelector('#login form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            const registerForm = document.querySelector('#register form');
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+
+            const personalInfoForm = document.getElementById('personal-info-form');
+            if (personalInfoForm) {
+                personalInfoForm.addEventListener('submit', handlePersonalInfo);
+            }
+        });
+    </script>
+</body>
+</html>
